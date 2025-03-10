@@ -5,6 +5,8 @@ from time import sleep
 from random import randint, choice
 from utime import ticks_ms
 
+
+# --------------------- Gameplay Function ---------------------- #
 def get_press(dark):
     timer = ticks_ms()
     while ticks_ms() - timer < 5000:
@@ -43,6 +45,9 @@ def get_press(dark):
     else:
         return -1
 
+# ----------------------------------------------------------------- #
+
+# ------------ Led Init Functions ----------- #
 
 def animation_1():
     for i in range(2):
@@ -60,7 +65,9 @@ def animation_2():
         led[i].value(0)
         sleep(0.3)
 
+# ------------------------------------------ #
 
+# ----------------------------- Display LCD Functions --------------------------------#
 def difficulty():
     lcd.clear()
     lcd.putstr('Difficulty:         ')
@@ -159,6 +166,9 @@ def slide():
             up = True
             i+=1
 
+# ----------------------------------------------------------------------------------- #
+
+# -------------------------------- Level Functions ---------------------------------- #
 def easy(dark):
     select = -1
     game = True
@@ -282,6 +292,10 @@ def secret(dark):
     else:
         lost_display()
 
+# ----------------------------------------------------------------------------------#
+
+# ---------- musical functions ----------#
+
 def win_1():
     lcd.clear()
     lcd.move_to(0,1)
@@ -303,7 +317,6 @@ def win_2():
     sleep(0.3)
     static()
     lcd.clear()
-
 
 def win_3():
     lcd.clear()
@@ -362,6 +375,9 @@ def menu_song():
     for note in menu_notes:
         speaker.play(note,0.25)
 
+# --------------------------------------- #
+
+# --------------- Box Functions ------------------ #
 def upp():
     pin_open.value(1)
     pin_close.value(0)
@@ -373,17 +389,21 @@ def down():
 def static():
     pin_close.value(0)
     pin_open.value(0)
+    
+# ------------------------------------------------ #
 
+# ----------------- Initial Attributions --------------- #
 i2c = I2C(id=1,scl=Pin(27),sda=Pin(26),freq=100000)
 lcd = I2cLcd(i2c, 0x27, 4, 20) # LCD 16x2
-
 pin_open = Pin(7, Pin.OUT, value = 0)
 pin_close = Pin(8, Pin.OUT, value = 1)
 botton = [Pin(10, Pin.IN, Pin.PULL_UP), Pin(11, Pin.IN, Pin.PULL_UP), Pin(12, Pin.IN, Pin.PULL_UP), Pin(13, Pin.IN, Pin.PULL_UP)]
 led = [Pin(21, Pin.OUT,value = 0), Pin(20, Pin.OUT, value = 0), Pin(19, Pin.OUT, value = 0), Pin(18, Pin.OUT, value = 0)]
 led_hard = Pin(5, Pin.OUT, value = 0)
-sequence = []
 
+# --------------------------------------------------------#
+
+# ---------------------- Songs ----------------------------- #
 song = ['f5','g5', 'a5', 'c6']
 
 win2_notes = ['f#5', 'f#5','d5', 'b4', 0, 'b4', 0, 'e5',
@@ -442,21 +462,32 @@ secret_notes = [0, 'd4', 'd4' ,'g4', 'g4', 'a#4','a4', 'a4','g4',
 
 menu_notes = ['c6', 'g5', 'f6']
 
+# ------------------------------------------------------- #
+
+# ---------------- Init Game ---------------- #
 speaker = Speaker(22)
 lcd.move_to(0,1)
 lcd.putstr('     Loading...     ')
 init()
 lcd.clear()
+# ------------------------------------------- #
+
+# ---- Variable Declarations ---- #
 init = False
 run = False
 right = True
 up = True
 dark = False
 change = False
+sequence = []
 selection = 0
 i = 0
 j = 0
 
+# ------------------------------- #
+
+
+# ------------------------- Main -------------------------- #
 while True:
     if (not botton[0]() or not botton[1]() or not botton[2].value() or not botton[3].value()) and init == False:
         menu_song()
@@ -492,3 +523,5 @@ while True:
         slide()
         lcd.move_to(j, i)
         lcd.putstr('Genius')
+
+# --------------------------------------------------------- #
